@@ -31,8 +31,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
       - name: Install Typst
         uses: typst-community/setup-typst@v4
+        with:
+          typst-version: ^0.14.0
       - name: Build
         run: make html
       - name: Setup Pages
