@@ -1,16 +1,16 @@
 TYP_FILES := $(shell find content -name '*.typ' -not -path '*/_*')
 
-HTML_FILES := $(patsubst content/%.typ,_site/%.html,$(TYP_FILES))
+HTML_FILES := $(patsubst content/%.typ,dist/%.html,$(TYP_FILES))
 
 BLOG_FILES := $(wildcard content/blog/*/index.typ)
 
 html: $(HTML_FILES) assets
 
-_site/%.html: content/%.typ
+dist/%.html: content/%.typ
 	@mkdir -p $(@D)
 	typst compile --root . --features html --format html $< $@
-_site/blog/index.html: index.json content/blog/index.typ
-	mkdir -p _site/blog
+dist/blog/index.html: index.json content/blog/index.typ
+	mkdir -p dist/blog
 	typst compile --root . --features html --format html content/blog/index.typ $@
 
 index.json:$(BLOG_FILES)
@@ -21,11 +21,11 @@ index.json:$(BLOG_FILES)
 	done | jq -s "." > $@
 
 assets:
-	@mkdir -p _site/assets
-	@cp -r assets/* _site/assets/
+	@mkdir -p dist/assets
+	@cp -r assets/* dist/assets/
 
 clean:
 	rm -f index.json
-	rm -rf _site/*
+	rm -rf dist/*
 
 .PHONY: html clean assets
